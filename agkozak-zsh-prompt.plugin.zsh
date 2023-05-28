@@ -415,13 +415,14 @@ _agkozak_branch_status() {
   emulate -L zsh
   (( AGKOZAK_PROMPT_DEBUG )) && setopt LOCAL_OPTIONS WARN_CREATE_GLOBAL
 
-  local ref branch
+  local ref branch tag
+  tag=$(command git tag --points-at HEAD 2> /dev/null | tr '\n' '/' 2> /dev/null) || tag=''
   ref=$(command git symbolic-ref --quiet HEAD 2> /dev/null)
   case $? in        # See what the exit code is.
     0) ;;           # $ref contains the name of a checked-out branch.
     128) return ;;  # No Git repository here.
     # Otherwise, see if HEAD is in detached state.
-    *) ref=$(command git rev-parse --short HEAD 2> /dev/null) || return ;;
+    *) ref=$(command git rev-parse --short head 2> /dev/null) || return ;;
   esac
   branch=${ref#refs/heads/}
 
@@ -474,7 +475,7 @@ _agkozak_branch_status() {
 
     [[ -n $symbols ]] && symbols=" ${symbols}"
 
-    printf -- '%s(%s%s)' "${AGKOZAK_BRANCH_STATUS_SEPARATOR- }" "$branch" \
+    printf -- '%s(%s%s%s)' "${AGKOZAK_BRANCH_STATUS_SEPARATOR- }" "$branch" "${tag:+/${tag:0:-1}}" \
       "$symbols"
   fi
 }
