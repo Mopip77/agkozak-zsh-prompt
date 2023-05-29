@@ -887,7 +887,7 @@ prompt_agkozak_precmd() {
 
   # Choose whether or not to display username and hostname
   # Legacy code to provide %5v for custom prompts that use it.
-  if (( ${AGKOZAK_USER_HOST_DISPLAY:-1} )); then
+  if [[ ${AGKOZAK_USER_HOST_DISPLAY:-1} -ne 0 && ( -n "$SSH_CLIENT-" || -n "$SSH_TTY" ) ]]; then
     psvar[5]=${AGKOZAK_USER_HOST_DISPLAY:-1}
   else
     psvar[5]=''
@@ -952,7 +952,7 @@ _agkozak_prompt_strings() {
     AGKOZAK[PROMPT]=''
     AGKOZAK[PROMPT]+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS:-red}}(%?%)%f%b )'
     AGKOZAK[PROMPT]+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME:-default}}${AGKOZAK_CMD_EXEC_TIME_CHARS[1]}%9v${AGKOZAK_CMD_EXEC_TIME_CHARS[2]}%f .)'
-    if (( AGKOZAK_USER_HOST_DISPLAY )); then
+    if [[ AGKOZAK_USER_HOST_DISPLAY -ne 0 && ( -n "$SSH_TTY" || -n "$SSH_CLIENT" ) ]]; then
       AGKOZAK[PROMPT]+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST:-green}})%n%1v%(!.%b%s.%f%b) '
     fi
     AGKOZAK[PROMPT]+='%B%F{${AGKOZAK_COLORS_PATH:-blue}}%2v%f%b'
