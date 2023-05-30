@@ -416,7 +416,7 @@ _agkozak_branch_status() {
   (( AGKOZAK_PROMPT_DEBUG )) && setopt LOCAL_OPTIONS WARN_CREATE_GLOBAL
 
   local ref branch tag
-  tag=$(command git tag --points-at HEAD 2> /dev/null | tr '\n' '/' 2> /dev/null) || tag=''
+  tag=$(command git tag --points-at HEAD 2> /dev/null | tr '\n' '|' 2> /dev/null) || tag=''
   ref=$(command git symbolic-ref --quiet HEAD 2> /dev/null)
   case $? in        # See what the exit code is.
     0) ;;           # $ref contains the name of a checked-out branch.
@@ -475,7 +475,7 @@ _agkozak_branch_status() {
 
     [[ -n $symbols ]] && symbols=" ${symbols}"
 
-    printf -- '%s(%s%s%s)' "${AGKOZAK_BRANCH_STATUS_SEPARATOR- }" "$branch" "${tag:+/${tag:0:-1}}" \
+    printf -- '%s(%s%s%s)' "${AGKOZAK_BRANCH_STATUS_SEPARATOR- }" "$branch" "${tag:+|${tag:0:-1}}" \
       "$symbols"
   fi
 }
